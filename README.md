@@ -1,6 +1,6 @@
-Population Genetics Analysis
+Population Sequencing Mutations Table Analysis
 Project Description
-This R script performs a detailed analysis of genetic mutations in a population study. It includes steps for loading necessary packages, reading mutation data from an Excel file, filtering mutations based on specific criteria, and summarizing the mutations. The script ends with creating various visualizations to understand mutation patterns across different lineages and times.
+This R script performs a detailed analysis of genetic mutations in a evolution study. It includes steps for loading necessary packages, reading mutation data from an Excel file, filtering mutations based on specific criteria, and summarizing the mutations. The script ends with creating various visualizations to understand mutation patterns across different lineages and times.
 
 Installation
 Prerequisites
