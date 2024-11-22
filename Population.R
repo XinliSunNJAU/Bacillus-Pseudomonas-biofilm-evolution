@@ -556,34 +556,56 @@ dfmuller <- df.filter%>%
 # Use gsub to remove the 'T' from column names that start with 'T'
 names(dfmuller) <- gsub("^T", "", names(dfmuller))
   
-lineages <- paste0("B", 1:8)
-groups <- c("", "P")  # "" for B-mono and "P" for BP-mono and Pseudomonas
+
+
+groups <- c("B-mono","B-co", "P-co")
+chromosome <- c("CP006890","CP046538")   #Bacillus and Pseudomonas respectively
+
+mullerdataset <- "mullerdataset"
+if (!dir.exists(mullerdataset)) {
+  dir.create(mullerdataset)}
 
 # Loop through each group and lineage
-for (group in groups) {
-  for (lineage in lineages) {
-    # Create lineage identifier
-    lineage_id <- paste0(group, lineage)
-    
-    # Filter df based on lineage and chromosome condition
-    if (group == "") {
-      # Bacillus monoculture populations
-      data_to_save <- subset(dfmuller, Lineage == lineage_id)
-    } else if (group == "P") {
-      # Bacillus co-culture with Pseudomonas populations
-      data_to_save <- subset(dfmuller, Lineage == lineage_id, Chromosome == "CP006890")
-      write.xlsx(data_to_save, paste0(lineage_id, ".xlsx"))
-      
-      # Pseudomonas populations
-      data_to_save <- subset(dfmuller, Lineage == lineage_id, Chromosome == "CP046538")
-      write.xlsx(data_to_save, paste0("P", lineage, ".xlsx"))
-      next
+for (species in chromosome){
+  if (species == "CP006890"){
+    for(group in groups){
+      # Mono-evolved Bacillus
+      if (group == "B-mono") {
+        for (i in 1:8) {
+          lineage_id <- paste0("B", i)
+          for(lineage in lineage_id){
+          data_to_save <- subset(dfmuller, Group == group & Lineage == lineage_id)
+          write.xlsx(data_to_save, file.path(mullerdataset, paste0(lineage_id, ".xlsx")))}
+        }
+      }
+      # Co-evolved Bacillus
+      else if (group == "B-co"){
+        for (i in 1:8) {
+          lineage_id <- paste0("BP", i)
+          for(lineage in lineage_id){
+          data_to_save <- subset(dfmuller, Group == group & Lineage == lineage_id)
+          write.xlsx(data_to_save, file.path(mullerdataset, paste0( lineage_id, ".xlsx")))
+        }
+      }
     }
-    
-    # Save the filtered data to an Excel file
-    write.xlsx(data_to_save, paste0(lineage_id, ".xlsx"))
+  } 
+  }
+  else {
+    # Co-evolved Pseudomonas
+    for (i in 1:8) {
+      for(group in groups){
+      if (group == "P-co") {
+      lineage_id <- paste0("BP", i)
+      for(lineage in lineage_id){
+      data_to_save <- subset(dfmuller,Group == group & Lineage == lineage_id)
+      write.xlsx(data_to_save, file.path(mullerdataset, paste0("P_", lineage_id, ".xlsx")))}
+    }
+  }
+  }
   }
 }
+
+
 
 # These files are used as input file for lolipop
 # lolipop requires linux system
